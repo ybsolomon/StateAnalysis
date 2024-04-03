@@ -21,28 +21,26 @@ maup.progress.enabled = True
 
 # %%
 # these two files alone take 13 minutes to download (census block level bc there wasnt a precinct shp file)
-population_df = gpd.read_file("./ny_pl2020_b/ny_pl2020_p2_b.shp")
-vap_df = gpd.read_file("./ny_pl2020_b/ny_pl2020_p4_b.shp")
+population_df = gpd.read_file("./ny_pl2020_vtd/ny_pl2020_vtd.shp")
 
 # %%
 
-election_df = gpd.read_file("./ny_2020_gen_2020_blocks/ny_2020_gen_2020_blocks.shp")
+election_df = gpd.read_file("./ny_vest_18/ny_vest_18.shp")
 cong_df = gpd.read_file("./ny_pl2020_cd/ny_pl2020_cd.shp")
 
 # %%
-print(cong_df.shape) # 38 senate districts
+print(cong_df.shape) # 27 senate districts
 
 # %%
 
 print(population_df.columns)
-print(vap_df.columns)
 print(cong_df.columns)
 print(election_df.columns)
 
 # %%
 
-print(cong_df)
-cong_df.dtypes
+print(cong_df.columns)
+# cong_df.dtypes
 
 # %%
 district_col_name = "CD116FP"
