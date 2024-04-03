@@ -20,116 +20,132 @@ import matplotlib as plt
 maup.progress.enabled = True
 
 # %%
-# these two files alone take 13 minutes to download (census block level bc there wasnt a precinct shp file)
 population_df = gpd.read_file("./ny_pl2020_vtd/ny_pl2020_vtd.shp")
-
-# %%
-
 election_df = gpd.read_file("./ny_vest_18/ny_vest_18.shp")
 cong_df = gpd.read_file("./ny_pl2020_cd/ny_pl2020_cd.shp")
 
 # %%
 print(cong_df.shape) # 27 senate districts
 
-# %%
+election_df = election_df.rename(columns={
+    "G18USSDGIL": "G18SEND",
+    "G18USSRFAR": "G18SENR",
+    "G18GOVDCUO": "G18GOVD",
+    "G18GOVRMOL": "G18GOVR",
+    "G18COMDDIN": "G18COMD",
+    "G18COMRTRI": "G18COMR",
+    "G18ATGDJAM": "G18ATGD",
+    "G18ATGRWOF": "G18ATGR"
+})
 
-print(population_df.columns)
-print(cong_df.columns)
+election_df.drop(columns=["G18USSOWRI", "G18GOVLSHA", "G18GOVGHAW", "G18GOVSMIN",
+                            "G18GOVOWRI", "G18COMLGAL", "G18COMGDUN", "G18COMOWRI",
+                            "G18ATGLGAR", "G18ATGGSUS", "G18ATGOSLI", "G18ATGOWRI"], 
+                inplace=True)
+
 print(election_df.columns)
-
-# %%
-
-print(cong_df.columns)
-# cong_df.dtypes
 
 # %%
 district_col_name = "CD116FP"
 
 # %%
-# this takes 10 minutes
-blocks_to_precincts_assignment = maup.assign(population_df.geometry, election_df.geometry)
-vap_blocks_to_precincts_assignment = maup.assign(vap_df.geometry, election_df.geometry)
+election_df.to_crs(4269, inplace=True)
 
 # %%
 
-print(blocks_to_precincts_assignment.dtypes)
+print(population_df.crs)
+
+vtds_to_precincts_assignment = maup.assign(election_df.geometry, population_df.geometry)
 
 # %%
 
-pop_column_names = ['P0020001', 'P0020002', 'P0020005', 'P0020006', 'P0020007',
-                    'P0020008', 'P0020009', 'P0020010']
-
-vap_column_names = ['P0040001', 'P0040002', 'P0040005', 'P0040006', 'P0040007',
-                    'P0040008', 'P0040009', 'P0040010']
+print(vtds_to_precincts_assignment.dtypes)
 
 # %%
 
-for name in pop_column_names:
-    election_df[name] = population_df[name].groupby(blocks_to_precincts_assignment).sum()
-for name in vap_column_names:
-    election_df[name] = vap_df[name].groupby(vap_blocks_to_precincts_assignment).sum()
+pop_column_names = ['P0020001', 'P0020002', 'P0020005', 'P0020006', 
+                    'P0020007', 'P0020008', 'P0020009', 'P0020010']
+                        
+vap_column_names = ['P0040001', 'P0040002', 'P0040005', 'P0040006', 
+                    'P0040007', 'P0040008', 'P0040009', 'P0040010']
+
+print(election_df.columns)
+
+# %%
+# elections_copy = election_df.copy()
+
+election_df[pop_column_names] = population_df[pop_column_names].groupby(vtds_to_precincts_assignment).sum()
+
+election_df[pop_column_names].head()
 
 # %%
 
-print(population_df['P0020001'].sum())
-print(election_df['P0020001'].sum())
-print(vap_df['P0040001'].sum())
-print(election_df['P0040001'].sum())
+print(population_df[pop_column_names].sum())
+print(election_df[pop_column_names].sum())
+
+election_cols = ["G18SEND", "G18SENR", "G18GOVD", "G18GOVR", "G18COMD", "G18COMR", "G18ATGD", "G18ATGR"]
+
 # %%
 
-# this takes 5 minutes
-print(maup.doctor(election_df))
+weights2018 = population_df["P0040001"] / vtds_to_precincts_assignment.map(population_df["P0040001"].groupby(vtds_to_precincts_assignment).sum())
+weights2018 = weights2018.fillna(0)
+
+# %%
+
+prorated2018 = maup.prorate(vtds_to_precincts_assignment, election_df[pop_column_names], weights2018)
+print(prorated2018.head())
+
+population_df[election_cols] = prorated2018
+
+# %%
+print(population_df[pop_column_names].sum())
+print(election_df[pop_column_names].sum())
+
+# %% this takes 30 seconds
+print(maup.doctor(population_df))
 
 # %%
 
 print(cong_df.shape)
 
 # %%
+# pop_copy = population_df.copy()
 
-precincts_to_districts_assignment = maup.assign(election_df.geometry, cong_df.geometry)
-election_df["CD"] = precincts_to_districts_assignment
-
-# %%
-print(set(election_df["CD"]))
-for precinct_index in range(len(election_df)):
-    election_df.at[precinct_index, "CD"] = int(cong_df.at[election_df.at[precinct_index, "CD"], district_col_name])
-print(set(cong_df[district_col_name]))
-print(set(election_df["CD"]))
+precincts_to_districts_assignment = maup.assign(population_df.geometry, cong_df.geometry)
+population_df["CD"] = precincts_to_districts_assignment
 
 # %%
 
+for precinct_index in range(len(population_df)):
+    population_df.at[precinct_index, "CD"] = int(cong_df.at[population_df.at[precinct_index, "CD"], district_col_name])
+
+
+# %%
+print(population_df.columns)
 rename_dict = {'P0020001': 'TOTPOP', 'P0020002': 'HISP', 'P0020005': 'NH_WHITE', 'P0020006': 'NH_BLACK', 'P0020007': 'NH_AMIN',
                     'P0020008': 'NH_ASIAN', 'P0020009': 'NH_NHPI', 'P0020010': 'NH_OTHER',
                     'P0040001': 'VAP', 'P0040002': 'HVAP', 'P0040005': 'WVAP', 'P0040006': 'BVAP', 'P0040007': 'AMINVAP',
-                                        'P0040008': 'ASIANVAP', 'P0040009': 'NHPIVAP', 'P0040010': 'OTHERVAP', 
-                                        'G20PREDBID': 'G20PRED', 'G20PRERTRU': 'G20PRER', 'G20USSDDUR': 'G20USSD', 
-                                        'G20USSRCUR': 'G20USSR'}
+                                        'P0040008': 'ASIANVAP', 'P0040009': 'NHPIVAP', 'P0040010': 'OTHERVAP'}
+
+population_df.rename(columns=rename_dict, inplace=True)
+print(population_df.columns)
 
 # %%
 # sanity type check
-print(election_df['CD'].dtypes)
-# %%
-election_df.rename(columns=rename_dict, inplace = True)
+print(population_df['CD'].dtypes)
 
 # %%
-election_df.drop(columns=[ 'G20PRELJOR','G20PREGHAW', 'G20PREIPIE', 'G20PREOWRI'], inplace=True)
-
-list(election_df.columns)
-
-# %%
-ny_map = gpd.GeoDataFrame(election_df, geometry='geometry')
+ny_map = gpd.GeoDataFrame(population_df, geometry='geometry')
 ny_map.plot()
-
-# %%
-print(election_df.loc[election_df["CD"] == 1, "TOTPOP"].sum())
-print(election_df.loc[election_df["CD"] == 2, "TOTPOP"].sum())
 
 pop_vals = []
 
 for i in range(1, 28):
-  pop_vals.append(election_df.loc[election_df["CD"] == i, "TOTPOP"].sum())
+  pop_vals.append(population_df.loc[population_df["CD"] == i, "TOTPOP"].sum())
 
 print(pop_vals)
-# %%
 
-election_df.to_file("./NY/NY.shp")
+# %%
+population_df.to_file("./NY/NY.shp")
+
+# %%
