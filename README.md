@@ -11,3 +11,7 @@ Follow the steps on the website and track the following file extensions:
 
 
 Overleaf Document: https://www.overleaf.com/4355137818cmrbqnhvdnqz#1e4cef
+
+
+Questions:
+1. Do we need cut edges in the updaters? How do we select the updaters?
