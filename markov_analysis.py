@@ -1,13 +1,17 @@
 import time
+import geopandas as gpd
 from gerrychain import Graph as gcG
 from RedistrictingMarkovChain import *
 
-STEPS = 1000  # TODO, [100, 5000, 10000, 20000]
+STEPS = 100  # TODO, [100, 5000, 10000, 20000]
 
 start_time = time.time()
 
 print("Starting graph load")
-ny_graph = gcG.from_file("./NY/NY.shp")
+shp_file = gpd.read_file('./NY/NY.shp')
+shp_file.to_file('./NY/NY.geojson', driver='GeoJSON')
+ny_graph = Graph.from_json("./NY/NY.geojson")  # node issue
+# ny_graph = gcG.from_file("./NY/NY.shp")
 print("Graph loaded")
 ny_markov_chain = RedistrictingMarkovChain(ny_graph,
                                            27,

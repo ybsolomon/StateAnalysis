@@ -19,7 +19,7 @@ class RedistrictingMarkovChain:
         self.num_dist = num_dist
 
         self.assignment = assignment
-        self.election_name = election_name
+        self.election_name = election_name  # TODO accept a str or list
         self.dem_col_name = dem_col_name
         self.rep_col_name = rep_col_name
         self.pop_col_name = pop_col_name
@@ -39,6 +39,7 @@ class RedistrictingMarkovChain:
             self.pop_col_name: Tally(self.pop_col_name, alias=self.pop_col_name),
             self.hpop_col_name: Tally(self.hpop_col_name, alias=self.hpop_col_name)
         }
+        # TODO update election initialization process : str or list
         e = Election(self.election_name, {"Democratic": self.dem_col_name, "Republican": self.rep_col_name})
         self.updaters.update({e.name: e})
 
