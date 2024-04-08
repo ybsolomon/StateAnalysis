@@ -9,7 +9,7 @@ from functools import partial
 
 class RedistrictingMarkovChain:
     def __init__(self, graph, num_dist, assignment, election_name,
-                 dem_col_name, rep_col_name, pop_col_name, hpop_col_name, pop_tolerance=0.02):
+                 dem_col_name, rep_col_name, pop_col_name, hpop_col_name, pop_tolerance=0.10):
         self.graph = graph
         self.initial_partition = None
         self.updaters = None
