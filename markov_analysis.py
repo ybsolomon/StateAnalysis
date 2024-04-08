@@ -3,7 +3,7 @@ import time
 # from gerrychain import Graph as gcG
 from RedistrictingMarkovChain import *
 
-STEPS = 100  # TODO, [100, 5000, 10000, 20000]
+STEPS = 20000  # TODO, [100, 5000, 10000, 20000]
 
 start_time = time.time()
 
