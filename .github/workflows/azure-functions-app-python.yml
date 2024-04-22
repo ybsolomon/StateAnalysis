@@ -3,7 +3,7 @@ name: Parallel Python Execution
 on:
   push:
     branches:
-      - main
+      - rishsanyal-patch-1
 
 jobs:
   run_python:
