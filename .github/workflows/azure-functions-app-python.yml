@@ -33,13 +33,13 @@ jobs:
     - name: Run Python scripts in parallel
       run: sudo apt-get install gdal-bin libgdal-dev
 
-    - name: Install lib
-      run: sudo python -m pip install GDAL==3.4.3
+    # - name: Install lib
+    #   run: sudo python -m pip install GDAL==3.4.3
       
-    # - name: Install dependencies
-    #   run: |
-    #     python -m pip install --upgrade pip
-    #     pip install -r requirements.txt
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
 
     # - name: Run Python scripts in parallel
     #   run: python data-cleaning.ipynb
