@@ -27,7 +27,7 @@ jobs:
       run: python data-cleaning.ipynb
 
     - name: Run Python scripts in parallel
-      run: python markov-chains.py
+      run: python markov_analysis.py
       
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
