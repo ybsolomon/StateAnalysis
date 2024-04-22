@@ -25,3 +25,10 @@ jobs:
 
     - name: Run Python scripts in parallel
       run: python data-cleaning.ipynb
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: my-python-output
+        path: |
+          NY/NY.shp
