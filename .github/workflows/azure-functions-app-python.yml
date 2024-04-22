@@ -40,6 +40,10 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
+        
+    - name: Cechk shp file
+      run: |
+        ls ./NY
 
     # - name: Run Python scripts in parallel
     #   run: python data-cleaning.ipynb
