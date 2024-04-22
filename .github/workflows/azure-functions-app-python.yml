@@ -28,13 +28,13 @@ jobs:
     - name: Run Python scripts in parallel
       run: sudo apt-get install libgdal-dev
 
-    - name: Install lib
-      run: python -m pip install PyGObject==3.44.1
+    # - name: Install lib
+    #   run: python -m pip install PyGObject==3.44.1
       
-    # - name: Install dependencies
-    #   run: |
-    #     python -m pip install --upgrade pip
-    #     pip install -r requirements.txt
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
 
     # - name: Run Python scripts in parallel
     #   run: python data-cleaning.ipynb
