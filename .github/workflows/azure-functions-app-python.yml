@@ -24,6 +24,4 @@ jobs:
         pip install -r requirements.txt
 
     - name: Run Python scripts in parallel
-      run: |
-        python markov_analysis.py
-      wait
+      run: python markov_analysis.py
