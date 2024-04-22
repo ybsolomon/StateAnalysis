@@ -51,7 +51,7 @@ fqdn==1.5.1
 frozenlist==1.4.0
 fsspec==2023.10.0
 gast==0.5.4
-GDAL==3.7.3
+GDAL==3.4.3
 geopandas==0.14.3
 gerrychain==0.3.0
 google-auth==2.25.2
