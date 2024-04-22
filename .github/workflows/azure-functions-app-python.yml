@@ -20,7 +20,7 @@ jobs:
 
 
     - name: Run Python scripts in parallel
-      run: sudo apt install build-essential
+      run: sudo apt install libgirepository1.0-dev && sudo apt install build-essential
 
     - name: Run Python scripts in parallel
       run: sudo apt-get install libgdal-dev
