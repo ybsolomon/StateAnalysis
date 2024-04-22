@@ -7,7 +7,7 @@ on:
 
 jobs:
   run_python:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04 #macos-12
 
     steps:
     - name: Checkout code
@@ -16,12 +16,34 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: '3.12.1'
+        python-version: '3.11.6'
 
+    - name: Run Python scripts in parallel
+      run: sudo apt-add-repository ppa:ubuntugis/ubuntugis-unstable && sudo apt-get update
+
+    - name: Run Python scripts in parallel
+      run: sudo apt install libgirepository1.0-dev && sudo apt install build-essential
+      
+    - name: Run Python scripts in parallel
+      run: sudo apt-get install -y libosmesa6-dev libgl1-mesa-dev libglu1-mesa-dev
+    
+    - name: Run Python scripts in parallel
+      run: sudo apt-get -y install gcc #&& sudo apt-get -y install python-devel libxslt-devel libffi-devel openssl-devel
+
+    - name: Run Python scripts in parallel
+      run: sudo apt-get install gdal-bin libgdal-dev
+
+    # - name: Install lib
+    #   run: sudo python -m pip install GDAL==3.4.3
+      
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
+        
+    - name: Check shp file
+      run: |
+        ls ./
 
     - name: Run Python scripts in parallel
       run: python data-cleaning.ipynb
@@ -34,4 +56,4 @@ jobs:
       with:
         name: my-python-output
         path: |
-          NY/NY.shp
+          NY/*
