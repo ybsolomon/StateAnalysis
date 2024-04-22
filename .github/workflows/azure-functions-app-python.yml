@@ -20,7 +20,7 @@ jobs:
 
 
     - name: Run Python scripts in parallel
-      run: sudo yum -y install gcc gcc-c++ kernel-devel && sudo yum -y install python-devel libxslt-devel libffi-devel openssl-devel
+      run: sudo apt install build-essential
 
     - name: Run Python scripts in parallel
       run: sudo apt-get install libgdal-dev
