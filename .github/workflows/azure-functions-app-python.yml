@@ -34,7 +34,7 @@ jobs:
       run: sudo apt-get install libgdal-dev
 
     - name: Install lib
-      run: python -m pip install GDAL
+      run: python -m pip install GDAL==3.7.3
       
     # - name: Install dependencies
     #   run: |
