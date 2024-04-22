@@ -19,7 +19,7 @@ jobs:
         python-version: '3.11.6'
 
     - name: Run Python scripts in parallel
-      run: sudo apt-get update
+      run: sudo apt-get update && sudo apt-get install yum
 
     - name: Run Python scripts in parallel
       run: sudo apt install libgirepository1.0-dev && sudo apt install build-essential
