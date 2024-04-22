@@ -36,12 +36,12 @@ jobs:
     # - name: Install lib
     #   run: sudo python -m pip install GDAL==3.4.3
       
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
+    # - name: Install dependencies
+    #   run: |
+    #     python -m pip install --upgrade pip
+    #     pip install -r requirements.txt
         
-    - name: Cechk shp file
+    - name: Check shp file
       run: |
         ls ./NY
 
