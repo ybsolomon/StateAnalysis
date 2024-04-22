@@ -37,4 +37,4 @@ jobs:
       with:
         name: my-python-output
         path: |
-          NY/NY.shp
+          NY/*
