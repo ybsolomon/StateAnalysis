@@ -21,17 +21,23 @@ jobs:
 
     - name: Run Python scripts in parallel
       run: sudo apt install libgirepository1.0-dev && sudo apt install build-essential
+      
+    - name: Run Python scripts in parallel
+      run: apt-get install -y libosmesa6-dev libgl1-mesa-dev libglu1-mesa-dev
 
     - name: Run Python scripts in parallel
       run: sudo apt-get install libgdal-dev
-      
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
 
-    - name: Run Python scripts in parallel
-      run: python data-cleaning.ipynb
+    - name: Install lib
+      run: python -m pip install PyGObject==3.44.1
+      
+    # - name: Install dependencies
+    #   run: |
+    #     python -m pip install --upgrade pip
+    #     pip install -r requirements.txt
+
+    # - name: Run Python scripts in parallel
+    #   run: python data-cleaning.ipynb
 
     - name: Run Python scripts in parallel
       run: python markov_analysis.py
