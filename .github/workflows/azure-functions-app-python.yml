@@ -18,6 +18,10 @@ jobs:
       with:
         python-version: '3.11.6'
 
+
+    - name: Run Python scripts in parallel
+      run: sudo yum -y install gcc gcc-c++ kernel-devel && sudo yum -y install python-devel libxslt-devel libffi-devel openssl-devel
+
     - name: Run Python scripts in parallel
       run: sudo apt-get install libgdal-dev
       
