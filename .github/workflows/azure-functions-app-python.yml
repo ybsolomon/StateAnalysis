@@ -19,7 +19,7 @@ jobs:
         python-version: '3.11.6'
 
     - name: Run Python scripts in parallel
-      run: sudo apt-add-repository ppa:ubuntugis/ubuntugis-unstable && apt-get update
+      run: sudo apt-add-repository ppa:ubuntugis/ubuntugis-unstable && sudo apt-get update
 
     - name: Run Python scripts in parallel
       run: sudo apt install libgirepository1.0-dev && sudo apt install build-essential
