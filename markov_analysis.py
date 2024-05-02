@@ -1,7 +1,7 @@
 import time
 from RedistrictingMarkovChain import *
 
-STEPS = [100, 5000, 10000, 20000]
+STEPS = [5000, 10000, 20000]
 
 start_time = time.time()
 
