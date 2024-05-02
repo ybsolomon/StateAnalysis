@@ -48,7 +48,6 @@ class RedistrictingMarkovChain:
             "democratic_votes": Tally(self.dem_col_name, alias="democratic_votes"),
             "republican_votes": Tally(self.rep_col_name, alias="republican_votes"),
         }
-        # TODO update election initialization process : str or list
         e = Election(self.election_name, {"Democratic": self.dem_col_name, "Republican": self.rep_col_name})
         self.updaters.update({e.name: e})
 
@@ -110,7 +109,7 @@ class RedistrictingMarkovChain:
                     num_democratic_maj += 1
 
             lmaj_ensemble.append(num_maj_latino)
-            # dem_win_ensemble.append(self._dem_win_updater(part))
+            # party_win_ensemble.append(self._party_win_updater(part))
             party_win_ensemble.append(num_democratic_maj)
 
         print("Walk complete")
