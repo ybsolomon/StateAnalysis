@@ -65,7 +65,7 @@ print("Reading in Data/Graph", flush=True)
 graph = Graph.from_file("./NY/NY.shp")
 
 
-my_updaters = {"population" : Tally(POP_COL, alias="population"),
+my_updaters = {"TOT_POP" : Tally(POP_COL, alias="TOT_POP"),
                "VAP": Tally("VAP"),
                "BVAP": Tally("BVAP"),
                "HVAP": Tally("HVAP"),

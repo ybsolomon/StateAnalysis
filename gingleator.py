@@ -16,7 +16,7 @@ import random
 
 def config_markov_chain(initial_part, iters=1000, epsilon=0.05,
                         compactness=True, pop="TOT_POP", accept_func=None):
-    ideal_population = np.nansum(list(initial_part["population"].values())) / len(initial_part)
+    ideal_population = np.nansum(list(initial_part["TOT_POP"].values())) / len(initial_part)
 
     proposal = partial(recom,
                        pop_col=pop,
