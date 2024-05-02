@@ -38,10 +38,14 @@ class RedistrictingMarkovChain:
         self.updaters = {
             "our cut edges": cut_edges,
             self.pop_col_name: Tally(self.pop_col_name, alias=self.pop_col_name),
-            self.hpop_col_name: Tally(self.hpop_col_name, alias=self.hpop_col_name)
+            self.hpop_col_name: Tally(self.hpop_col_name, alias=self.hpop_col_name),
+            "democratic_votes": Tally(self.dem_col_name, alias="democratic_votes"),
+            "republican_votes": Tally(self.rep_col_name, alias="republican_votes"),
         }
+
         # TODO update election initialization process : str or list
         e = Election(self.election_name, {"Democratic": self.dem_col_name, "Republican": self.rep_col_name})
+
         self.updaters.update({e.name: e})
 
     def init_partition(self):
@@ -110,12 +114,18 @@ class RedistrictingMarkovChain:
             cutedge_ensemble.append(len(part["our cut edges"]))
 
             num_maj_latino = 0
+            num_democratic_maj = 0
             for i in range(self.num_dist):
                 l_perc = part[self.hpop_col_name][i + 1] / part[self.pop_col_name][i + 1]  # 1-indexed dist identifiers
                 if l_perc >= 0.5:
                     num_maj_latino = num_maj_latino + 1
+
+                if part["democratic_votes"][i+1] > part["republican_votes"][i+1]:
+                    num_democratic_maj += 1
+
             lmaj_ensemble.append(num_maj_latino)
-            dem_win_ensemble.append(self._dem_win_updater(part))
+            # dem_win_ensemble.append(self._dem_win_updater(part))
+            dem_win_ensemble.append(num_democratic_maj)
 
         print("Walk complete")
         return cutedge_ensemble, lmaj_ensemble, dem_win_ensemble

@@ -3,7 +3,7 @@ import time
 # from gerrychain import Graph as gcG
 from RedistrictingMarkovChain import *
 
-STEPS = [100] # 5000, 10000, 20000
+STEPS = [100] #[5000, 10000, 20000] #100,
 
 start_time = time.time()
 
@@ -34,7 +34,6 @@ for election in elections:
                                                       "TOTPOP",
                                                       "HISP")  # TODO verify naming convention
             ny_markov_chain.init_partition()
-            # TODO add loop for 4 dif number of steps : 100, 5k, 10k, 20k
 
             for step in STEPS:
                   ny_markov_chain.init_markov_chain(steps=step)
