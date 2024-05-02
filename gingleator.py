@@ -49,7 +49,7 @@ class Gingleator:
     of gingles districts.
     """
 
-    def __init__(self, initial_partition, threshold=0.4,
+    def __init__(self, initial_partition, threshold=0.5,
                  score_funct=None, minority_perc_col=None,
                  pop_col="TOTPOP", epsilon=0.05):
         self.part = initial_partition

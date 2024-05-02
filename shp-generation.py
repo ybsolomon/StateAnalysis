@@ -40,7 +40,7 @@ election_df = election_df.rename(columns={
 
 election_df.drop(columns=["G18USSOWRI", "G18GOVLSHA", "G18GOVGHAW", "G18GOVSMIN",
                             "G18GOVOWRI", "G18COMLGAL", "G18COMGDUN", "G18COMOWRI",
-                            "G18ATGLGAR", "G18ATGGSUS", "G18ATGOSLI", "G18ATGOWRI"], 
+                            "G18ATGLGAR", "G18ATGGSUS", "G18ATGOSLI", "G18ATGOWRI"],
                 inplace=True)
 
 print(election_df.columns)
@@ -63,10 +63,10 @@ print(vtds_to_precincts_assignment.dtypes)
 
 # %%
 
-pop_column_names = ['P0020001', 'P0020002', 'P0020005', 'P0020006', 
+pop_column_names = ['P0020001', 'P0020002', 'P0020005', 'P0020006',
                     'P0020007', 'P0020008', 'P0020009', 'P0020010']
-                        
-vap_column_names = ['P0040001', 'P0040002', 'P0040005', 'P0040006', 
+
+vap_column_names = ['P0040001', 'P0040002', 'P0040005', 'P0040006',
                     'P0040007', 'P0040008', 'P0040009', 'P0040010']
 
 print(election_df.columns)

@@ -5,6 +5,7 @@ from gerrychain.updaters import cut_edges, Tally
 from gerrychain.proposals import recom
 from gerrychain.accept import always_accept
 from functools import partial
+from gerrychain.proposals import propose_random_flip
 
 
 class RedistrictingMarkovChain:
@@ -29,7 +30,7 @@ class RedistrictingMarkovChain:
         dem_shares = partition[self.election_name].percents("Democratic")
         dem_wins = 0
         for dist in dem_shares:
-            if dist > 0.5:
+            if dist >= 0.5:
                 dem_wins += 1
         return dem_wins
 
@@ -58,24 +59,45 @@ class RedistrictingMarkovChain:
 
     def init_markov_chain(self, steps):
         self._calc_population()
-        rw_proposal = partial(recom,
-                              pop_col=self.pop_col_name,
-                              pop_target=self.ideal_pop,
-                              epsilon=self.pop_tolerance,
-                              node_repeats=1
-                              )
+        ## Why are we using recom instead of propose_random_flip?
+
+        # rw_proposal = partial(recom,
+        #                       pop_col=self.pop_col_name,
+        #                       pop_target=self.ideal_pop,
+        #                       epsilon=self.pop_tolerance,
+        #                       node_repeats=1
+        #                       )
+        # population_constraint = constraints.within_percent_of_ideal_population(
+        #     self.initial_partition,
+        #     self.pop_tolerance,
+        #     pop_key=self.pop_col_name)
+        # random_walk = MarkovChain(
+        #     proposal=rw_proposal,
+        #     constraints=[population_constraint],
+        #     accept=always_accept,
+        #     initial_state=self.initial_partition,
+        #     total_steps=steps)
+        # self.random_walk = random_walk
+
+        proposal = partial(
+            propose_random_flip,
+        )
+
         population_constraint = constraints.within_percent_of_ideal_population(
             self.initial_partition,
             self.pop_tolerance,
-            pop_key=self.pop_col_name)
-        random_walk = MarkovChain(
-            proposal=rw_proposal,
+            pop_key=self.pop_col_name
+        )
+
+        chain = MarkovChain(
+            proposal=proposal,
             constraints=[population_constraint],
             accept=always_accept,
             initial_state=self.initial_partition,
-            total_steps=steps)
-        self.random_walk = random_walk
+            total_steps=10
+        )
 
+        self.random_walk = chain
         print(f"Markov Chain initialized with {steps} steps")
 
     def walk_the_run(self):
