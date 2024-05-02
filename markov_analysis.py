@@ -1,6 +1,4 @@
 import time
-# import geopandas as gpd
-# from gerrychain import Graph as gcG
 from RedistrictingMarkovChain import *
 
 STEPS = [100, 5000, 10000, 20000]
@@ -8,34 +6,31 @@ STEPS = [100, 5000, 10000, 20000]
 start_time = time.time()
 
 print("Starting graph load")
-# shp_file = gpd.read_file('./NY/NY.shp')
-# shp_file.to_file('./NY/NY.geojson', driver='GeoJSON')
-# ny_graph = Graph.from_json("./NY/NY.geojson")  # node issue
 ny_graph = Graph.from_file("./NY/NY.shp")
 print("Graph loaded")
 ny_markov_chain = RedistrictingMarkovChain(ny_graph,
                                            26,
                                            "CD",
-                                           "SEN18",  # TODO run multiple elections ?
-                                           "G18SEND",
-                                           "G18SENR",
+                                           {"ATG18": {"Dem": "G18ATGD", "Rep": "G18ATGR"},
+                                            "COM18": {"Dem": "G18COMD", "Rep": "G18COMR"},
+                                            "GOV18": {"Dem": "G18GOVD", "Rep": "G18GOVR"},
+                                            "SEN18": {"Dem": "G18SEND", "Rep": "G18SENR"}, },
                                            "TOTPOP",
-                                           "HISP")  # TODO verify naming convention
+                                           "HISP")
 ny_markov_chain.init_partition()
-# TODO add loop for 4 dif number of steps : 100, 5k, 10k, 20k
 
-for step in STEPS:
-      ny_markov_chain.init_markov_chain(steps=step)
-      cutedge_ensemble, lmaj_ensemble, dem_win_ensemble = ny_markov_chain.walk_the_run()
+for steps in STEPS:
+    ny_markov_chain.init_markov_chain(steps=steps)
+    cutedge_ensemble, lmaj_ensemble, dem_win_ensemble = ny_markov_chain.walk_the_run()
 
-      # Histograms
-      # 1. Cut edge
-      plot_histograms(cutedge_ensemble, f"histograms/cutedge_ensemble_{step}.png")
-      # 2. Majority-Latino districts
-      plot_histograms(lmaj_ensemble, f"histograms/lmaj_ensemble_{step}.png")
-      # 3. Democratic-won districts
-      plot_histograms(dem_win_ensemble, f"histograms/dem_win_ensemble_{step}.png")
+    # Histograms
+    # 1. Cut edge
+    plot_histograms(cutedge_ensemble, "histograms/cutedge_ensemble", steps)
+    # 2. Majority-Latino districts
+    plot_histograms(lmaj_ensemble, "histograms/lmaj_ensemble", steps)
+    # 3. Democratic-won districts
+    plot_histograms(dem_win_ensemble, "histograms/dem_win_ensemble", steps)
 
-      end_time = time.time()
-      print("The time of execution of above program for step-count ", step,"is :",
-            (end_time - start_time) / 60, "mins")
+    end_time = time.time()
+    print("The time of execution of above program for step-count ", steps, "is :",
+          (end_time - start_time) / 60, "mins")
