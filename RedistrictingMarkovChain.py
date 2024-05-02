@@ -7,9 +7,23 @@ from gerrychain.accept import always_accept
 from functools import partial
 
 
+def plot_histograms(data, filepath, steps):
+    if isinstance(data, dict):
+        for election in data.keys():
+            plt.figure()
+            plt.hist(data.get(election), align="left")
+            plt.savefig(f"{filepath}_{election}_{steps}.png")
+    elif isinstance(data, list):
+        plt.figure()
+        plt.hist(data, align="left")
+        plt.savefig(f"{filepath}_{steps}.png")
+    else:
+        raise TypeError(f"data must be either a dict or a list, instead received {type(data)}")
+
+
 class RedistrictingMarkovChain:
-    def __init__(self, graph, num_dist, assignment, election_name,
-                 dem_col_name, rep_col_name, pop_col_name, hpop_col_name, pop_tolerance=0.10):
+    def __init__(self, graph, num_dist, assignment, elections_map, pop_col_name, hpop_col_name,
+                 dem_party_name="Democratic", rep_party_name="Republican", pop_tolerance=0.10):
         self.graph = graph
         self.initial_partition = None
         self.updaters = None
@@ -19,19 +33,26 @@ class RedistrictingMarkovChain:
         self.num_dist = num_dist
 
         self.assignment = assignment
-        self.election_name = election_name  # TODO accept a str or list
-        self.dem_col_name = dem_col_name
-        self.rep_col_name = rep_col_name
+        self.election_names = elections_map.keys()
+        self.election_party_cols = elections_map
         self.pop_col_name = pop_col_name
         self.hpop_col_name = hpop_col_name
+        self.dem_party_name = dem_party_name
+        self.rep_party_name = rep_party_name
 
-    def _dem_win_updater(self, partition):
-        dem_shares = partition[self.election_name].percents("Democratic")
-        dem_wins = 0
-        for dist in dem_shares:
-            if dist > 0.5:
-                dem_wins += 1
-        return dem_wins
+    def _party_win_updater(self, partition):
+        wins_per_election = dict()
+        for election in self.election_names:
+            dem_shares = partition[election].percents(self.dem_party_name)
+            dem_seats = partition[election].seats(self.dem_party_name)
+            rep_shares = partition[election].percents(self.rep_party_name)
+            rep_seats = partition[election].seats(self.rep_party_name)
+            party_wins = 0
+            for dist in dem_shares:
+                if dist > 0.5:
+                    party_wins += 1
+            wins_per_election.update({election: party_wins})
+        return wins_per_election
 
     def _init_updaters(self):
         self.updaters = {
@@ -39,9 +60,10 @@ class RedistrictingMarkovChain:
             self.pop_col_name: Tally(self.pop_col_name, alias=self.pop_col_name),
             self.hpop_col_name: Tally(self.hpop_col_name, alias=self.hpop_col_name)
         }
-        # TODO update election initialization process : str or list
-        e = Election(self.election_name, {"Democratic": self.dem_col_name, "Republican": self.rep_col_name})
-        self.updaters.update({e.name: e})
+        for election in self.election_names:
+            e = Election(election, {self.dem_party_name: self.election_party_cols.get(election).get("Dem"),
+                                    self.rep_party_name: self.election_party_cols.get(election).get("Rep")})
+            self.updaters.update({e.name: e})
 
     def init_partition(self):
         self._init_updaters()
@@ -81,7 +103,7 @@ class RedistrictingMarkovChain:
     def walk_the_run(self):
         cutedge_ensemble = []
         lmaj_ensemble = []
-        dem_win_ensemble = []
+        party_win_ensemble = {}
 
         print("Walking the ensemble")
         for part in self.random_walk:
@@ -93,13 +115,10 @@ class RedistrictingMarkovChain:
                 if l_perc >= 0.5:
                     num_maj_latino = num_maj_latino + 1
             lmaj_ensemble.append(num_maj_latino)
-            dem_win_ensemble.append(self._dem_win_updater(part))
+            election_wins = self._party_win_updater(part)
+            party_win_ensemble = {k: election_wins.get(k) for k, v in election_wins.items()}
+            # party_win_ensemble.update(self._party_win_updater(part))  # TODO test this instead of above 2 lines
 
         print("Walk complete")
-        return cutedge_ensemble, lmaj_ensemble, dem_win_ensemble
+        return cutedge_ensemble, lmaj_ensemble, party_win_ensemble
 
-
-def plot_histograms(ensemble, filename):
-    plt.figure()
-    plt.hist(ensemble, align="left")
-    plt.savefig(filename)
