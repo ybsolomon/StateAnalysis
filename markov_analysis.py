@@ -1,12 +1,12 @@
 import time
 from RedistrictingMarkovChain import *
 
-STEPS = [5000, 10000, 20000]
+STEPS = [100]
 
 start_time = time.time()
 
 print("Starting graph load")
-ny_graph = Graph.from_file("./NY/NY.shp")
+ny_graph = Graph.from_file("./WA/WA.shp")
 print("Graph loaded")
 
 elections = [
