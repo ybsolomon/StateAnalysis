@@ -10,7 +10,7 @@ ny_graph = Graph.from_file("./NY-lab/NY.shp")
 print("Graph loaded")
 
 elections = [
-    ["PRE20", "G20PRER", "G20PRED"],
+    ["PRE20",  "G20PRED", "G20PRER"],
     # ["SEN18", "G18SEND", "G18SENR"],  ## election for previous graphs
     # ["GOV18", "G18GOVD", "G18GOVR"],
     # ["COM18", "G18COMD", "G18COMR"],
