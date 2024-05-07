@@ -58,13 +58,13 @@ graph = Graph.from_file("./NY-lab/NY.shp")
 
 
 my_updaters = {"TOT_POP" : Tally(POP_COL, alias="TOT_POP"),
-                "VAP": Tally("VAP"),
-                "BVAP": Tally("BVAP"),
-                "HVAP": Tally("HVAP"),
-                "WVAP": Tally("WVAP"),
-                "nWVAP": lambda p: {k: v - p["WVAP"][k] for k,v in p["VAP"].items()},
-                "cut_edges": cut_edges,
-                "population" : Tally(POP_COL, alias="TOT_POP")}
+               "VAP": Tally("VAP"),
+               "BVAP": Tally("BVAP"),
+               "HVAP": Tally("HVAP"),
+               "WVAP": Tally("WVAP"),
+               "nWVAP": lambda p: {k: v - p["WVAP"][k] for k,v in p["VAP"].items()},
+               "cut_edges": cut_edges,
+               "population" : Tally(POP_COL, alias="TOT_POP")}
 
 
 print("Creating seed plan", flush=True)

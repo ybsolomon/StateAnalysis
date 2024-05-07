@@ -11,7 +11,7 @@ from geopandas import gpd
 
 class RedistrictingMarkovChain(object):
     def __init__(self, graph, num_dist, assignment, election_name,
-                 dem_col_name, rep_col_name, pop_col_name, hpop_col_name,
+                 dem_col_name, rep_col_name, pop_col_name, hpop_col_name, bvap,
                  dem_party_name="Democratic", rep_party_name="Republican", pop_tolerance=0.10):
         self.graph = graph
         self.initial_partition = None
@@ -27,6 +27,7 @@ class RedistrictingMarkovChain(object):
         self.rep_col_name = rep_col_name
         self.pop_col_name = pop_col_name
         self.hpop_col_name = hpop_col_name
+        self.bvap = bvap
         self.dem_party_name = dem_party_name
         self.rep_party_name = rep_party_name
 
@@ -135,10 +136,15 @@ class RedistrictingMarkovChain(object):
 
             num_maj_latino = 0
             num_democratic_maj = 0
-            # for i in range(self.num_dist):
-                # l_perc = part[self.hpop_col_name][i + 1] / part[self.pop_col_name][i + 1]  # 1-indexed dist identifiers
-                # if l_perc >= 0.5:
-                #     num_maj_latino = num_maj_latino + 1
+            for i in range(self.num_dist):
+                b_perc = part[self.bvap][i + 1] / part[self.pop_col_name][i + 1]  # 1-indexed dist identifiers
+                if b_perc >= 0.5:
+                    num_maj_latino = num_maj_latino + 1
+
+                l_perc = part[self.hpop_col_name][i + 1] / part[self.pop_col_name][i + 1]  # 1-indexed dist identifiers
+                if l_perc >= 0.5:
+                    num_maj_latino = num_maj_latino + 1
+
             for i in set(self.blocks_df['SEN']):
                 if part["democratic_votes"][i] > part["republican_votes"][i]:
                     num_democratic_maj += 1

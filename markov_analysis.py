@@ -2,7 +2,7 @@ import time
 from RedistrictingMarkovChain import *
 
 
-STEPS = [100, 500] #[5000, 10000, 20000]
+STEPS = [5000, 10000, 20000] #[100, 500]
 
 start_time = time.time()
 
@@ -11,7 +11,7 @@ ny_graph = Graph.from_file("./NY-lab/NY.shp")
 print("Graph loaded")
 
 elections = [
-    ["PRE20", "G20PRER", "G20PRED"],
+    ["PRE20", "G20PRED", "G20PRER"],
     # ["SEN18", "G18SEND", "G18SENR"],  ## election for previous graphs
     # ["GOV18", "G18GOVD", "G18GOVR"],
     # ["COM18", "G18COMD", "G18COMR"],
@@ -30,6 +30,7 @@ for election in elections:
                                                    election[2],
                                                    "TOTPOP",
                                                    "HISP",
+                                                   "BVAP",
                                                    pop_tol)
         ny_markov_chain.init_partition()
 
