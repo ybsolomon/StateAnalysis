@@ -47,7 +47,7 @@ N_SAMPS = 10
 SCORE_FUNCT = score_functs[args.score]
 EPS = 0.045
 MIN_POP_COL = args.col
-TOLERANCE = 0.7
+TOLERANCE = 0.5
 
 ## Setup graph, updaters, elections, and initial partition
 
@@ -101,13 +101,13 @@ for n in range(N_SAMPS):
     print("\tSaving results", flush=True)
 
     f_out = "data/states/{}_{}_dists{}_{}opt_{:.1%}_{}_sbl{}_score{}_{}.npy".format(TOLERANCE, args.state,
-    NUM_DISTRICTS, MIN_POP_COL, EPS,
-    ITERS, BURST_LEN, args.score, n)
+                                                        NUM_DISTRICTS, MIN_POP_COL, EPS,
+                                                        ITERS, BURST_LEN, args.score, n)
     np.save(f_out, sb_obs[1])
 
     f_out_part = "data/states/{}_{}_dists{}_{}opt_{:.1%}_{}_sbl{}_score{}_{}_max_part.p".format(TOLERANCE, args.state,
-    NUM_DISTRICTS, MIN_POP_COL, EPS,
-    ITERS, BURST_LEN, args.score, n)
+                                                        NUM_DISTRICTS, MIN_POP_COL, EPS,
+                                                        ITERS, BURST_LEN, args.score, n)
 
     max_stats = {"VAP": sb_obs[0][0]["VAP"],
     "BVAP": sb_obs[0][0]["BVAP"],
