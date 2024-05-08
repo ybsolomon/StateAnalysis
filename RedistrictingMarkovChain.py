@@ -1,4 +1,4 @@
-import statistics
+import metrics
 
 import matplotlib.pyplot as plt
 from gerrychain import GeographicPartition, Graph, constraints, MarkovChain, Election
@@ -68,12 +68,13 @@ class RedistrictingMarkovChain(object):
         )
         self.initial_partition = initial_partition
 
-        return initial_partition
+        # return initial_partition
 
     def init_markov_chain(self, steps=10):
+        self._init_updaters()
         initial_partition = GeographicPartition(
             self.graph,
-            assignment= "CD",
+            assignment="CD",
             updaters=self.updaters
         )
 
@@ -98,6 +99,8 @@ class RedistrictingMarkovChain(object):
         )
 
         self.random_walk = chain
+
+        return chain
 
     def walk_the_run(self):
         cutedge_ensemble = []
@@ -143,69 +146,3 @@ def plot_histograms(ensemble, filename):
     plt.figure()
     plt.hist(ensemble, align="left")
     plt.savefig(filename)
-
-
-# MM is directly proportional to the gerymandering of the districting plan
-def mm(part, election, party):
-    # Get the vote totals for the Democratic and Republican parties
-    if party == "Democratic":
-        votes = part[election].percents("Democratic")
-    else:
-        votes = part[election].percents("Republican")
-
-    # Calculate the mean-median difference
-    mean_median_diff = statistics.median(votes) - statistics.mean(votes)
-
-    return mean_median_diff
-
-
-# Efficiency Gap
-def eg(part, election):
-    # Get the vote totals for the Democratic and Republican parties
-    dem_votes = list(part[election].totals_for_party['Democratic'].values())
-    rep_votes = list(part[election].totals_for_party['Republican'].values())
-
-    winning_areas = set()
-
-    # Get winning areas
-    for i in range(len(dem_votes)):
-        if dem_votes[i] >= rep_votes[i]:
-            winning_areas.add(i)
-
-    # Calculate the number of wasted votes for the Democratic and Republican parties
-    dem_wasted_votes = 0
-    rep_wasted_votes = 0
-
-    for i in range(len(dem_votes)):
-        if i in winning_areas:
-            dem_wasted_votes += dem_votes[i] - (0.5 * (dem_votes[i] + rep_votes[i]))
-            rep_wasted_votes += rep_votes[i]
-        else:
-            dem_wasted_votes += dem_votes[i]
-            rep_wasted_votes += rep_votes[i] - (0.5 * (dem_votes[i] + rep_votes[i]))
-
-    # Calculate the efficiency gap
-    efficiency_gap = (rep_wasted_votes - dem_wasted_votes) / sum(dem_votes + rep_votes)
-
-    return efficiency_gap
-
-
-# Partisan Bias
-def pb(part, election):
-    votes_dem = sum(part[election].votes("Democratic"))
-    pop = sum(part[election].totals.values())
-    vs_dem = votes_dem / pop
-
-    total_votes_dem = part[election].totals_for_party["Democratic"]
-    totals = part[election].totals
-
-    dist_above_vs = 0
-    districts = len(totals)
-
-    for district, votes in totals.items():
-        if (total_votes_dem[district] / votes) > vs_dem:
-            dist_above_vs += 1
-
-    pb = (dist_above_vs / districts) - 0.5
-
-    return pb
