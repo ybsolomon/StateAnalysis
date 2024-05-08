@@ -23,21 +23,21 @@ from gingleator import Gingleator
 import json
 
 ## Read in
-# parser = argparse.ArgumentParser(description="SB Chain run",
-#                                  prog="sb_runs.py")
-# parser.add_argument("state", metavar="state_id", type=str,
-#                     choices=["VA", "TX", "AR", "CO", "LA", "NM", "NY"],
-#                     help="which state to run chains on")
-# parser.add_argument("iters", metavar="chain_length", type=int,
-#                     help="how long to run each chain")
-# parser.add_argument("l", metavar="burst_length", type=int,
-#                     help="The length of each short burst")
-# parser.add_argument("col", metavar="column", type=str,
-#                     help="Which column to optimize")
-# parser.add_argument("score", metavar="score_function", type=int,
-#                     help="How to count gingles districts",
-#                     choices=[0,1,2,3,4])
-# args = parser.parse_args()
+parser = argparse.ArgumentParser(description="SB Chain run",
+                                 prog="sb_runs.py")
+parser.add_argument("--state", metavar="state_id", type=str,
+                    choices=["VA", "TX", "AR", "CO", "LA", "NM", "NY"],
+                    help="which state to run chains on")
+parser.add_argument("--iters", metavar="chain_length", type=int,
+                    help="how long to run each chain", default=1000)
+parser.add_argument("--l", metavar="burst_length", type=int,
+                    help="The length of each short burst", default=50)
+parser.add_argument("--col", metavar="column", type=str,
+                    help="Which column to optimize", default="HVAP")
+parser.add_argument("--score", metavar="score_function", type=int,
+                    help="How to count gingles districts",
+                    choices=[0,1,2,3,4], default=0)
+args = parser.parse_args()
 
 num_h_districts = {"VA": 100, "TX": 150, "AR": 100, "CO": 65, "LA": 105, "NM": 70, "NY": 26}
 
@@ -47,15 +47,15 @@ score_functs = {0: None, 1: Gingleator.reward_partial_dist,
     3: Gingleator.penalize_maximum_over,
     4: Gingleator.penalize_avg_over}
 
-BURST_LEN = 50 #args.l
+BURST_LEN = args.l
 NUM_DISTRICTS = num_h_districts["NY"]
-ITERS = 100 #args.iters
+ITERS = args.iters
 POP_COL = "TOTPOP"
 N_SAMPS = 10
 SCORE_FUNCT = score_functs[0]
 EPS = 0.045
-MIN_POP_COL = "HVAP" #args.col
-TOLERANCE = 0.1
+MIN_POP_COL = args.col
+TOLERANCE = 0.3
 
 ## Setup graph, updaters, elections, and initial partition
 

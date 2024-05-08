@@ -1,0 +1,121 @@
+Adding sb run files
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+#
+# interactive rebase in progress; onto 19fd514
+# Last commands done (3 commands done):
+#    pick 4eeb86f adding new sb run files
+#    pick 028d4fd Adding sb run files
+# No commands remaining.
+# You are currently rebasing branch 'main' on '19fd514'.
+#
+# Changes to be committed:
+#	modified:   RedistrictingMarkovChain.py
+#	new file:   data/states/0.1_NY_dists26_HVAPopt_4.5%_100_sbl50_score0_0.npy
+#	new file:   data/states/0.1_NY_dists26_HVAPopt_4.5%_100_sbl50_score0_0_max_part.p
+#	new file:   data/states/0.1_NY_dists26_HVAPopt_4.5%_100_sbl50_score0_1.npy
+#	new file:   data/states/0.1_NY_dists26_HVAPopt_4.5%_100_sbl50_score0_1_max_part.p
+#	new file:   data/states/0.1_NY_dists26_HVAPopt_4.5%_100_sbl50_score0_2.npy
+#	new file:   data/states/0.1_NY_dists26_HVAPopt_4.5%_100_sbl50_score0_2_max_part.p
+#	new file:   data/states/0.1_NY_dists26_HVAPopt_4.5%_100_sbl50_score0_3.npy
+#	new file:   data/states/0.1_NY_dists26_HVAPopt_4.5%_100_sbl50_score0_3_max_part.p
+#	new file:   data/states/0.1_NY_dists26_HVAPopt_4.5%_100_sbl50_score0_4.npy
+#	new file:   data/states/0.1_NY_dists26_HVAPopt_4.5%_100_sbl50_score0_4_max_part.p
+#	new file:   data/states/0.1_NY_dists26_HVAPopt_4.5%_100_sbl50_score0_5.npy
+#	new file:   data/states/0.1_NY_dists26_HVAPopt_4.5%_100_sbl50_score0_5_max_part.p
+#	new file:   data/states/0.1_NY_dists26_HVAPopt_4.5%_100_sbl50_score0_6.npy
+#	new file:   data/states/0.1_NY_dists26_HVAPopt_4.5%_100_sbl50_score0_6_max_part.p
+#	new file:   data/states/0.1_NY_dists26_HVAPopt_4.5%_100_sbl50_score0_7.npy
+#	new file:   data/states/0.1_NY_dists26_HVAPopt_4.5%_100_sbl50_score0_7_max_part.p
+#	new file:   data/states/0.1_NY_dists26_HVAPopt_4.5%_100_sbl50_score0_8.npy
+#	new file:   data/states/0.1_NY_dists26_HVAPopt_4.5%_100_sbl50_score0_8_max_part.p
+#	new file:   data/states/0.1_NY_dists26_HVAPopt_4.5%_100_sbl50_score0_9.npy
+#	new file:   data/states/0.1_NY_dists26_HVAPopt_4.5%_100_sbl50_score0_9_max_part.p
+#	new file:   data/states/0.5_NY_dists26_HVAPopt_4.5%_100_sbl50_score0_0.npy
+#	new file:   data/states/0.5_NY_dists26_HVAPopt_4.5%_100_sbl50_score0_0_max_part.p
+#	new file:   data/states/0.5_NY_dists26_HVAPopt_4.5%_100_sbl50_score0_1.npy
+#	new file:   data/states/0.5_NY_dists26_HVAPopt_4.5%_100_sbl50_score0_1_max_part.p
+#	new file:   data/states/0.5_NY_dists26_HVAPopt_4.5%_100_sbl50_score0_2.npy
+#	new file:   data/states/0.5_NY_dists26_HVAPopt_4.5%_100_sbl50_score0_2_max_part.p
+#	new file:   data/states/0.5_NY_dists26_HVAPopt_4.5%_100_sbl50_score0_3.npy
+#	new file:   data/states/0.5_NY_dists26_HVAPopt_4.5%_100_sbl50_score0_3_max_part.p
+#	new file:   data/states/0.5_NY_dists26_HVAPopt_4.5%_100_sbl50_score0_4.npy
+#	new file:   data/states/0.5_NY_dists26_HVAPopt_4.5%_100_sbl50_score0_4_max_part.p
+#	new file:   data/states/0.5_NY_dists26_HVAPopt_4.5%_100_sbl50_score0_5.npy
+#	new file:   data/states/0.5_NY_dists26_HVAPopt_4.5%_100_sbl50_score0_5_max_part.p
+#	new file:   data/states/0.5_NY_dists26_HVAPopt_4.5%_100_sbl50_score0_6.npy
+#	new file:   data/states/0.5_NY_dists26_HVAPopt_4.5%_100_sbl50_score0_6_max_part.p
+#	new file:   data/states/0.5_NY_dists26_HVAPopt_4.5%_100_sbl50_score0_7.npy
+#	new file:   data/states/0.5_NY_dists26_HVAPopt_4.5%_100_sbl50_score0_7_max_part.p
+#	new file:   data/states/0.5_NY_dists26_HVAPopt_4.5%_100_sbl50_score0_8.npy
+#	new file:   data/states/0.5_NY_dists26_HVAPopt_4.5%_100_sbl50_score0_8_max_part.p
+#	new file:   data/states/0.5_NY_dists26_HVAPopt_4.5%_100_sbl50_score0_9.npy
+#	new file:   data/states/0.5_NY_dists26_HVAPopt_4.5%_100_sbl50_score0_9_max_part.p
+#	new file:   data/states/0.7_NY_dists26_VAPopt_4.5%_1000_sbl50_score0_0.npy
+#	new file:   data/states/0.7_NY_dists26_VAPopt_4.5%_1000_sbl50_score0_0_max_part.p
+#	new file:   data/states/0.7_NY_dists26_VAPopt_4.5%_1000_sbl50_score0_1.npy
+#	new file:   data/states/0.7_NY_dists26_VAPopt_4.5%_1000_sbl50_score0_1_max_part.p
+#	new file:   data/states/0.7_NY_dists26_VAPopt_4.5%_1000_sbl50_score0_2.npy
+#	new file:   data/states/0.7_NY_dists26_VAPopt_4.5%_1000_sbl50_score0_2_max_part.p
+#	new file:   data/states/0.7_NY_dists26_VAPopt_4.5%_1000_sbl50_score0_3.npy
+#	new file:   data/states/0.7_NY_dists26_VAPopt_4.5%_1000_sbl50_score0_3_max_part.p
+#	new file:   data/states/0.7_NY_dists26_VAPopt_4.5%_1000_sbl50_score0_4.npy
+#	new file:   data/states/0.7_NY_dists26_VAPopt_4.5%_1000_sbl50_score0_4_max_part.p
+#	new file:   data/states/0.7_NY_dists26_VAPopt_4.5%_1000_sbl50_score0_5.npy
+#	new file:   data/states/0.7_NY_dists26_VAPopt_4.5%_1000_sbl50_score0_5_max_part.p
+#	new file:   data/states/0.7_NY_dists26_VAPopt_4.5%_1000_sbl50_score0_6.npy
+#	new file:   data/states/0.7_NY_dists26_VAPopt_4.5%_1000_sbl50_score0_6_max_part.p
+#	new file:   data/states/0.7_NY_dists26_VAPopt_4.5%_1000_sbl50_score0_7.npy
+#	new file:   data/states/0.7_NY_dists26_VAPopt_4.5%_1000_sbl50_score0_7_max_part.p
+#	new file:   data/states/0.7_NY_dists26_VAPopt_4.5%_1000_sbl50_score0_8.npy
+#	new file:   data/states/0.7_NY_dists26_VAPopt_4.5%_1000_sbl50_score0_8_max_part.p
+#	new file:   data/states/0.7_NY_dists26_VAPopt_4.5%_1000_sbl50_score0_9.npy
+#	new file:   data/states/0.7_NY_dists26_VAPopt_4.5%_1000_sbl50_score0_9_max_part.p
+#	new file:   data/states/0.7_NY_dists26_VAPopt_4.5%_100_sbl50_score0_0.npy
+#	new file:   data/states/0.7_NY_dists26_VAPopt_4.5%_100_sbl50_score0_0_max_part.p
+#	new file:   data/states/0.7_NY_dists26_VAPopt_4.5%_100_sbl50_score0_1.npy
+#	new file:   data/states/0.7_NY_dists26_VAPopt_4.5%_100_sbl50_score0_1_max_part.p
+#	new file:   data/states/0.7_NY_dists26_VAPopt_4.5%_100_sbl50_score0_2.npy
+#	new file:   data/states/0.7_NY_dists26_VAPopt_4.5%_100_sbl50_score0_2_max_part.p
+#	new file:   data/states/0.7_NY_dists26_VAPopt_4.5%_100_sbl50_score0_3.npy
+#	new file:   data/states/0.7_NY_dists26_VAPopt_4.5%_100_sbl50_score0_3_max_part.p
+#	new file:   data/states/0.7_NY_dists26_VAPopt_4.5%_100_sbl50_score0_4.npy
+#	new file:   data/states/0.7_NY_dists26_VAPopt_4.5%_100_sbl50_score0_4_max_part.p
+#	new file:   data/states/0.7_NY_dists26_VAPopt_4.5%_100_sbl50_score0_5.npy
+#	new file:   data/states/0.7_NY_dists26_VAPopt_4.5%_100_sbl50_score0_5_max_part.p
+#	new file:   data/states/0.7_NY_dists26_VAPopt_4.5%_100_sbl50_score0_6.npy
+#	new file:   data/states/0.7_NY_dists26_VAPopt_4.5%_100_sbl50_score0_6_max_part.p
+#	new file:   data/states/0.7_NY_dists26_VAPopt_4.5%_100_sbl50_score0_7.npy
+#	new file:   data/states/0.7_NY_dists26_VAPopt_4.5%_100_sbl50_score0_7_max_part.p
+#	new file:   data/states/0.7_NY_dists26_VAPopt_4.5%_100_sbl50_score0_8.npy
+#	new file:   data/states/0.7_NY_dists26_VAPopt_4.5%_100_sbl50_score0_8_max_part.p
+#	new file:   data/states/0.7_NY_dists26_VAPopt_4.5%_100_sbl50_score0_9.npy
+#	new file:   data/states/0.7_NY_dists26_VAPopt_4.5%_100_sbl50_score0_9_max_part.p
+#	new file:   data/states/0.9_NY_dists26_VAPopt_4.5%_1000_sbl50_score0_0.npy
+#	new file:   data/states/0.9_NY_dists26_VAPopt_4.5%_1000_sbl50_score0_0_max_part.p
+#	new file:   data/states/0.9_NY_dists26_VAPopt_4.5%_1000_sbl50_score0_1.npy
+#	new file:   data/states/0.9_NY_dists26_VAPopt_4.5%_1000_sbl50_score0_1_max_part.p
+#	new file:   data/states/0.9_NY_dists26_VAPopt_4.5%_1000_sbl50_score0_2.npy
+#	new file:   data/states/0.9_NY_dists26_VAPopt_4.5%_1000_sbl50_score0_2_max_part.p
+#	new file:   data/states/0.9_NY_dists26_VAPopt_4.5%_1000_sbl50_score0_3.npy
+#	new file:   data/states/0.9_NY_dists26_VAPopt_4.5%_1000_sbl50_score0_3_max_part.p
+#	new file:   data/states/0.9_NY_dists26_VAPopt_4.5%_1000_sbl50_score0_4.npy
+#	new file:   data/states/0.9_NY_dists26_VAPopt_4.5%_1000_sbl50_score0_4_max_part.p
+#	new file:   data/states/0.9_NY_dists26_VAPopt_4.5%_1000_sbl50_score0_5.npy
+#	new file:   data/states/0.9_NY_dists26_VAPopt_4.5%_1000_sbl50_score0_5_max_part.p
+#	new file:   data/states/0.9_NY_dists26_VAPopt_4.5%_1000_sbl50_score0_6.npy
+#	new file:   data/states/0.9_NY_dists26_VAPopt_4.5%_1000_sbl50_score0_6_max_part.p
+#	new file:   data/states/0.9_NY_dists26_VAPopt_4.5%_1000_sbl50_score0_7.npy
+#	new file:   data/states/0.9_NY_dists26_VAPopt_4.5%_1000_sbl50_score0_7_max_part.p
+#	new file:   data/states/0.9_NY_dists26_VAPopt_4.5%_1000_sbl50_score0_8.npy
+#	new file:   data/states/0.9_NY_dists26_VAPopt_4.5%_1000_sbl50_score0_8_max_part.p
+#	new file:   data/states/0.9_NY_dists26_VAPopt_4.5%_1000_sbl50_score0_9.npy
+#	new file:   data/states/0.9_NY_dists26_VAPopt_4.5%_1000_sbl50_score0_9_max_part.p
+#	new file:   data/states/0.9_NY_dists26_VAPopt_4.5%_500_sbl50_score0_0.npy
+#	new file:   data/states/0.9_NY_dists26_VAPopt_4.5%_500_sbl50_score0_0_max_part.p
+#	modified:   outlier_analysis.ipynb
+#	modified:   requirements.txt
+#	modified:   sb.ipynb
+#	modified:   sb_runs.py
+#
