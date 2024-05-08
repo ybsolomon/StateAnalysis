@@ -23,13 +23,21 @@ from gingleator import Gingleator
 import json
 
 ## Read in
-parser = argparse.ArgumentParser(description="SB Chain run", prog="sb_runs.py")
-parser.add_argument("state", metavar="state_id", type=str, choices=["VA", "TX", "AR", "CO", "LA", "NM", "NY"], help="which state to run chains on")
-parser.add_argument("iters", metavar="chain_length", type=int, help="how long to run each chain")
-parser.add_argument("l", metavar="burst_length", type=int, help="The length of each short burst")
-parser.add_argument("col", metavar="column", type=str, help="Which column to optimize")
-parser.add_argument("score", metavar="score_function", type=int, help="How to count gingles districts", choices=[0,1,2,3,4])
-args = parser.parse_args()
+# parser = argparse.ArgumentParser(description="SB Chain run",
+#                                  prog="sb_runs.py")
+# parser.add_argument("state", metavar="state_id", type=str,
+#                     choices=["VA", "TX", "AR", "CO", "LA", "NM", "NY"],
+#                     help="which state to run chains on")
+# parser.add_argument("iters", metavar="chain_length", type=int,
+#                     help="how long to run each chain")
+# parser.add_argument("l", metavar="burst_length", type=int,
+#                     help="The length of each short burst")
+# parser.add_argument("col", metavar="column", type=str,
+#                     help="Which column to optimize")
+# parser.add_argument("score", metavar="score_function", type=int,
+#                     help="How to count gingles districts",
+#                     choices=[0,1,2,3,4])
+# args = parser.parse_args()
 
 num_h_districts = {"VA": 100, "TX": 150, "AR": 100, "CO": 65, "LA": 105, "NM": 70, "NY": 26}
 
@@ -39,15 +47,15 @@ score_functs = {0: None, 1: Gingleator.reward_partial_dist,
     3: Gingleator.penalize_maximum_over,
     4: Gingleator.penalize_avg_over}
 
-BURST_LEN = args.l
-NUM_DISTRICTS = num_h_districts[args.state]
-ITERS = args.iters
+BURST_LEN = 50 #args.l
+NUM_DISTRICTS = num_h_districts["NY"]
+ITERS = 100 #args.iters
 POP_COL = "TOTPOP"
 N_SAMPS = 10
-SCORE_FUNCT = score_functs[args.score]
+SCORE_FUNCT = score_functs[0]
 EPS = 0.045
-MIN_POP_COL = args.col
-TOLERANCE = 0.5
+MIN_POP_COL = "HVAP" #args.col
+TOLERANCE = 0.1
 
 ## Setup graph, updaters, elections, and initial partition
 
@@ -100,14 +108,14 @@ for n in range(N_SAMPS):
 
     print("\tSaving results", flush=True)
 
-    f_out = "data/states/{}_{}_dists{}_{}opt_{:.1%}_{}_sbl{}_score{}_{}.npy".format(TOLERANCE, args.state,
+    f_out = "data/states/{}_{}_dists{}_{}opt_{:.1%}_{}_sbl{}_score{}_{}.npy".format(TOLERANCE, "NY",
                                                         NUM_DISTRICTS, MIN_POP_COL, EPS,
-                                                        ITERS, BURST_LEN, args.score, n)
+                                                        ITERS, BURST_LEN, 0, n)
     np.save(f_out, sb_obs[1])
 
-    f_out_part = "data/states/{}_{}_dists{}_{}opt_{:.1%}_{}_sbl{}_score{}_{}_max_part.p".format(TOLERANCE, args.state,
+    f_out_part = "data/states/{}_{}_dists{}_{}opt_{:.1%}_{}_sbl{}_score{}_{}_max_part.p".format(TOLERANCE, "NY",
                                                         NUM_DISTRICTS, MIN_POP_COL, EPS,
-                                                        ITERS, BURST_LEN, args.score, n)
+                                                        ITERS, BURST_LEN, 0, n)
 
     max_stats = {"VAP": sb_obs[0][0]["VAP"],
     "BVAP": sb_obs[0][0]["BVAP"],

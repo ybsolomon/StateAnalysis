@@ -31,13 +31,11 @@ class RedistrictingMarkovChain(object):
         self.dem_party_name = dem_party_name
         self.rep_party_name = rep_party_name
 
-        self.blocks_df = gpd.read_file("./new_states/shapefiles/vt_election_df.shp")
-
     def _party_win_updater(self, partition):
         dem_shares = partition[self.election_name].percents("Democratic")
-        dem_seats = partition[self.election_name].seats(self.dem_party_name)
-        rep_shares = partition[self.election_name].percents(self.rep_party_name)
-        rep_seats = partition[self.election_name].seats(self.rep_party_name)
+        # dem_seats = partition[self.election_name].seats(self.dem_party_name)
+        # rep_shares = partition[self.election_name].percents(self.rep_party_name)
+        # rep_seats = partition[self.election_name].seats(self.rep_party_name)
         party_wins = 0
         for dist in dem_shares:
             if dist >= 0.5:
@@ -45,20 +43,13 @@ class RedistrictingMarkovChain(object):
         return party_wins
 
     def _init_updaters(self):
-        # self.updaters = {
-        #     "our cut edges": cut_edges,
-        #     self.pop_col_name: Tally(self.pop_col_name, alias=self.pop_col_name),
-        #     self.hpop_col_name: Tally(self.hpop_col_name, alias=self.hpop_col_name),
-        #     "democratic_votes": Tally(self.dem_col_name, alias="democratic_votes"),
-        #     "republican_votes": Tally(self.rep_col_name, alias="republican_votes"),
-        # }
         self.updaters = {
             "our cut edges": cut_edges,
             "population": Tally("TOTPOP", alias="population"),
             "democratic_votes": Tally("G20PRED", alias="democratic_votes"),
             "republican_votes": Tally("G20PRER", alias="republican_votes"),
         }
-        # e = Election(self.election_name, {"Democratic": self.dem_col_name, "Republican": self.rep_col_name})
+
         elections = [
             Election("G20PRE", {"Democratic": "G20PRED", "Republican": "G20PRER"}),
         ]
@@ -70,39 +61,19 @@ class RedistrictingMarkovChain(object):
         self._init_updaters()
         initial_partition = GeographicPartition(
             self.graph,
-            assignment="SEN",
+            assignment="CD",
             updaters=self.updaters
         )
         self.initial_partition = initial_partition
 
-    # def _calc_population(self):
-    #     tot_pop = sum([self.graph.nodes()[v][self.pop_col_name] for v in self.graph.nodes()])
-    #     self.ideal_pop = tot_pop / self.num_dist
-
     def init_markov_chain(self, steps=10):
-        # my_updaters = {
-        #     "population": Tally("TOTPOP", alias="population"),
-        #     "democratic_votes": Tally("G20PRED", alias="democratic_votes"),
-        #     "republican_votes": Tally("G20PRER", alias="republican_votes"),
-        # }
-
-        # elections = [
-        #     Election("G20PRE", {"Democratic": "G20PRED", "Republican": "G20PRER"}),
-        # ]
-        # my_updaters.update(
-        #     {election.name: election for election in elections}
-        # )
-
         initial_partition = GeographicPartition(
             self.graph,
-            assignment= "SEN",
+            assignment= "CD",
             updaters=self.updaters
         )
 
-        tot_pop = sum([self.graph.nodes()[v]['TOTPOP'] for v in self.graph.nodes()])
-        num_dist = len(set(self.blocks_df['SEN'])) # Number of Congressional Districts in Illinois
-
-        pop_tolerance = 0.7
+        pop_tolerance = 0.02
 
         proposal = partial(
             propose_random_flip,
