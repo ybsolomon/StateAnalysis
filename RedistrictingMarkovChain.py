@@ -1,14 +1,11 @@
-import metrics
+from metrics import *
 
 import matplotlib.pyplot as plt
-from gerrychain import GeographicPartition, Graph, constraints, MarkovChain, Election
+from gerrychain import GeographicPartition, constraints, MarkovChain, Election
 from gerrychain.updaters import Tally, cut_edges
-# from gerrychain.proposals import recom
 from gerrychain.accept import always_accept
 from functools import partial
 from gerrychain.proposals import propose_random_flip
-
-from geopandas import gpd
 
 
 class RedistrictingMarkovChain(object):
@@ -33,15 +30,23 @@ class RedistrictingMarkovChain(object):
         self.dem_party_name = dem_party_name
         self.rep_party_name = rep_party_name
 
-    def _party_win_updater(self, partition):
+    # TODO delete method ? OR move logic in chain run below
+    def _party_win_updater(self, partition, party):
+        # Validate party
+        if not (party == "Democratic" or party == "Republican"):
+            raise ValueError("Unknown party")
+
         dem_shares = partition[self.election_name].percents("Democratic")
-        # dem_seats = partition[self.election_name].seats(self.dem_party_name)
-        # rep_shares = partition[self.election_name].percents(self.rep_party_name)
-        # rep_seats = partition[self.election_name].seats(self.rep_party_name)
+        dem_seats = partition[self.election_name].seats(self.dem_party_name)
+        rep_shares = partition[self.election_name].percents(self.rep_party_name)
+        rep_seats = partition[self.election_name].seats(self.rep_party_name)
+
         party_wins = 0
+
         for dist in dem_shares:
             if dist >= 0.5:
                 party_wins += 1
+
         return party_wins
 
     def _init_updaters(self):
@@ -67,8 +72,6 @@ class RedistrictingMarkovChain(object):
             updaters=self.updaters
         )
         self.initial_partition = initial_partition
-
-        # return initial_partition
 
     def init_markov_chain(self, steps=10):
         self._init_updaters()
@@ -117,25 +120,27 @@ class RedistrictingMarkovChain(object):
             num_maj_latino = 0
             num_democratic_maj = 0
 
+            # Calculate metrics for each state in the Markov Chain
             mmd_ensemble.append(mm(part, "G20PRE", "Democratic"))
             eg_ensemble.append(eg(part, "G20PRE"))
-            pb_ensemble.append(pb(part, "G20PRE"))
+            pb_ensemble.append(pb(part, "G20PRE", "Democratic"))
 
             for i in range(self.num_dist):
+                # Count black-majority districts
                 b_perc = part[self.bvap][i + 1] / part[self.pop_col_name][i + 1]  # 1-indexed dist identifiers
                 if b_perc >= 0.5:
                     num_maj_latino = num_maj_latino + 1
 
+                # Count latino-majority districts
                 l_perc = part[self.hpop_col_name][i + 1] / part[self.pop_col_name][i + 1]  # 1-indexed dist identifiers
                 if l_perc >= 0.5:
                     num_maj_latino = num_maj_latino + 1
 
-            # for i in set(self.blocks_df['SEN']):
+                # Count democratic-won districts
                 if part["democratic_votes"][i] > part["republican_votes"][i]:
                     num_democratic_maj += 1
 
             lmaj_ensemble.append(num_maj_latino)
-            # party_win_ensemble.append(self._party_win_updater(part))
             party_win_ensemble.append(num_democratic_maj)
 
         print("Walk complete")
