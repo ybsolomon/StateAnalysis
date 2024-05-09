@@ -1,6 +1,57 @@
 import statistics
 
 
+# Cut Edges
+def ce(part):
+    return len(part["our cut edges"])
+
+
+# Minority Districts
+def md(part, minority):
+    # Validate minority
+    if not (minority == "HISP" or minority == "BVAP"):
+        raise ValueError("Untracked minority")
+
+    num_maj_minority = 0
+
+    # Calculate number of majority minority districts
+    for district in part[minority]:
+        minority_perc = part[minority][district + 1] / part["population"][district + 1]  # 1-indexed dist identifiers
+        if minority_perc >= 0.5:
+            num_maj_minority = num_maj_minority + 1
+
+    return num_maj_minority
+
+
+# Party-won Districts
+def pd(part, election, party):
+    # Validate party
+    if not (party == "Democratic" or party == "Republican"):
+        raise ValueError("Unknown party")
+
+    party_shares = part[election].percents(party)
+    party_seats = part[election].seats(party)
+
+    party_wins_1 = 0
+    party_wins_2 = 0
+
+    # Calculate party-won districts
+    for district in party_shares:
+        # Method 1: simple majority
+        if district >= 0.5:
+            party_wins_1 += 1
+
+        # Method 2: voting-percentage win
+        if part["democratic_votes"][district + 1] > part["republican_votes"][district + 1]:
+            party_wins_2 += 1
+
+    # Verify calculated party-won districts were (indeed) won
+    if not (party_wins_1 == party_seats and party_wins_2 == party_shares):
+        return party_seats
+
+    return party_wins_1
+
+
 # Mean-Median Difference
 def mm(part, election, party):
     # Validate party
