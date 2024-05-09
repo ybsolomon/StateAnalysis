@@ -11,7 +11,7 @@ from gerrychain.proposals import propose_random_flip
 class RedistrictingMarkovChain(object):
     def __init__(self, graph, num_dist, assignment, election_name,
                  dem_col_name, rep_col_name, pop_col_name, hpop_col_name,
-                 # bvap_col_name,  # TODO
+                 bvap,  # TODO
                  dem_party_name="Democratic", rep_party_name="Republican", pop_tolerance=0.10):
         self.graph = graph
         self.initial_partition = None
@@ -27,7 +27,7 @@ class RedistrictingMarkovChain(object):
         self.rep_col_name = rep_col_name
         self.pop_col_name = pop_col_name
         self.hpop_col_name = hpop_col_name
-        # self.bvap = bvap_col_name  # TODO
+        self.bvap = bvap  # TODO
         self.dem_party_name = dem_party_name
         self.rep_party_name = rep_party_name
 
@@ -57,8 +57,8 @@ class RedistrictingMarkovChain(object):
             "population": Tally("TOTPOP", alias="population"),
             "democratic_votes": Tally("G20PRED", alias="democratic_votes"),
             "republican_votes": Tally("G20PRER", alias="republican_votes"),
-            # "hisp_pop": Tally("HISP", alias="hisp_pop"),
-            # "black_pop": Tally("BVAP", alias="black_pop"), # TODO keep column in shp file
+            "HISP": Tally("HISP", alias="HISP"),
+            "BVAP": Tally("BVAP", alias="BVAP"), # TODO keep column in shp file
         }
 
         # Initialize election updaters
@@ -79,6 +79,15 @@ class RedistrictingMarkovChain(object):
         self.initial_partition = initial_partition
 
     def init_markov_chain(self, steps=10):
+        # Initialize updaters and partition
+        self._init_updaters()
+        initial_partition = GeographicPartition(
+            self.graph,
+            assignment="CD",
+            updaters=self.updaters
+        )
+        self.initial_partition = initial_partition
+
         # Use random flips as the algorithm
         proposal = partial(
             propose_random_flip,
@@ -113,7 +122,7 @@ class RedistrictingMarkovChain(object):
 
     def walk_the_run(self):
         cutedge_ensemble = []
-        # bmaj_ensemble = []  # TODO
+        bmaj_ensemble = []  # TODO
         lmaj_ensemble = []
         party_win_ensemble = []
         mmd_ensemble = []
@@ -138,17 +147,17 @@ class RedistrictingMarkovChain(object):
             for i in range(self.num_dist):
                 # Count black-majority districts
                 # TODO
-                # b_perc = part[self.bvap][i + 1] / part[self.pop_col_name][i + 1]  # 1-indexed dist identifiers
-                # if b_perc >= 0.5:
-                #     num_maj_black = num_maj_black + 1
+                b_perc = part[self.bvap][i + 1] / part["population"][i + 1]  # 1-indexed dist identifiers
+                if b_perc >= 0.5:
+                    num_maj_black = num_maj_black + 1
 
                 # Count latino-majority districts
-                l_perc = part[self.hpop_col_name][i + 1] / part[self.pop_col_name][i + 1]  # 1-indexed dist identifiers
+                l_perc = part[self.hpop_col_name][i + 1] / part["population"][i + 1]  # 1-indexed dist identifiers  # self.pop_col_name
                 if l_perc >= 0.5:
                     num_maj_latino = num_maj_latino + 1
 
                 # Count democratic-won districts
-                if part["democratic_votes"][i] > part["republican_votes"][i]:
+                if part["democratic_votes"][i + 1] > part["republican_votes"][i + 1]:
                     num_democratic_maj += 1
 
             # bmaj_ensemble.append(num_maj_black)  # TOOD
@@ -156,7 +165,7 @@ class RedistrictingMarkovChain(object):
             party_win_ensemble.append(num_democratic_maj)
 
         print("Walk complete")
-        return cutedge_ensemble, lmaj_ensemble, party_win_ensemble
+        return cutedge_ensemble, lmaj_ensemble, party_win_ensemble, mmd_ensemble, eg_ensemble, pb_ensemble
 
 
 def plot_histograms(ensemble, filename):
