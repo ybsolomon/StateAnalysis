@@ -79,16 +79,7 @@ print("Creating seed plan", flush=True)
 
 total_pop = sum([graph.nodes()[n][POP_COL] for n in graph.nodes()])
 
-## Question: What should the starting seed be?
-# seed_bal = {"AR": "05", "CO": "02", "LA": "04", "NM": "04", "TX": "02", "VA": "02", "NY": "02"}
-
-# with open("{}_house_seed_{}.json".format(args.state, seed_bal[args.state]), "r") as f:
-#cddict = json.load(f)
-
-# cddict = {int(k):v for k,v in cddict.items()}
-
 init_partition = Partition(graph, assignment="CD", updaters=my_updaters)
-
 
 gingles = Gingleator(init_partition, pop_col=POP_COL,
 threshold=TOLERANCE, score_funct=SCORE_FUNCT, epsilon=EPS,
