@@ -10,7 +10,8 @@ from gerrychain.proposals import propose_random_flip
 
 class RedistrictingMarkovChain(object):
     def __init__(self, graph, num_dist, assignment, election_name,
-                 dem_col_name, rep_col_name, pop_col_name, hpop_col_name, bvap,
+                 dem_col_name, rep_col_name, pop_col_name, hpop_col_name,
+                 # bvap_col_name,  # TODO
                  dem_party_name="Democratic", rep_party_name="Republican", pop_tolerance=0.10):
         self.graph = graph
         self.initial_partition = None
@@ -26,7 +27,7 @@ class RedistrictingMarkovChain(object):
         self.rep_col_name = rep_col_name
         self.pop_col_name = pop_col_name
         self.hpop_col_name = hpop_col_name
-        self.bvap = bvap
+        # self.bvap = bvap_col_name  # TODO
         self.dem_party_name = dem_party_name
         self.rep_party_name = rep_party_name
 
@@ -50,13 +51,17 @@ class RedistrictingMarkovChain(object):
         return party_wins
 
     def _init_updaters(self):
+        # Initialize population and vote updaters
         self.updaters = {
             "our cut edges": cut_edges,
             "population": Tally("TOTPOP", alias="population"),
             "democratic_votes": Tally("G20PRED", alias="democratic_votes"),
             "republican_votes": Tally("G20PRER", alias="republican_votes"),
+            # "hisp_pop": Tally("HISP", alias="hisp_pop"),
+            # "black_pop": Tally("BVAP", alias="black_pop"), # TODO keep column in shp file
         }
 
+        # Initialize election updaters
         elections = [
             Election("G20PRE", {"Democratic": "G20PRED", "Republican": "G20PRER"}),
         ]
@@ -74,30 +79,24 @@ class RedistrictingMarkovChain(object):
         self.initial_partition = initial_partition
 
     def init_markov_chain(self, steps=10):
-        self._init_updaters()
-        initial_partition = GeographicPartition(
-            self.graph,
-            assignment="CD",
-            updaters=self.updaters
-        )
-
-        pop_tolerance = 0.02
-
+        # Use random flips as the algorithm
         proposal = partial(
             propose_random_flip,
         )
 
+        # Initialize population constraint
         population_constraint = constraints.within_percent_of_ideal_population(
-            initial_partition,
-            pop_tolerance,
+            self.initial_partition,
+            self.pop_tolerance,
             pop_key="population"
         )
 
+        # Initialize Markov Chain
         chain = MarkovChain(
             proposal=proposal,
             constraints=[population_constraint],
             accept=always_accept,
-            initial_state=initial_partition,
+            initial_state=self.initial_partition,
             total_steps=steps
         )
 
@@ -105,19 +104,30 @@ class RedistrictingMarkovChain(object):
 
         return chain
 
+    def _calc_metrics(self):
+        part_mmd = mm(self.random_walk.initial_state, "G20PRE", "Democratic")
+        part_eg = eg(self.random_walk.initial_state, "G20PRE")
+        part_pb = pb(self.random_walk.initial_state, "G20PRE", "Democratic")
+
+        return part_mmd, part_eg, part_pb
+
     def walk_the_run(self):
         cutedge_ensemble = []
+        # bmaj_ensemble = []  # TODO
         lmaj_ensemble = []
         party_win_ensemble = []
         mmd_ensemble = []
         eg_ensemble = []
         pb_ensemble = []
 
+        mm_init, eg_init, pb_init = self._calc_metrics()
+
         print("Walking the ensemble")
         for part in self.random_walk:
             cutedge_ensemble.append(len(part["our cut edges"]))
 
             num_maj_latino = 0
+            num_maj_black = 0  # TODO
             num_democratic_maj = 0
 
             # Calculate metrics for each state in the Markov Chain
@@ -127,9 +137,10 @@ class RedistrictingMarkovChain(object):
 
             for i in range(self.num_dist):
                 # Count black-majority districts
-                b_perc = part[self.bvap][i + 1] / part[self.pop_col_name][i + 1]  # 1-indexed dist identifiers
-                if b_perc >= 0.5:
-                    num_maj_latino = num_maj_latino + 1
+                # TODO
+                # b_perc = part[self.bvap][i + 1] / part[self.pop_col_name][i + 1]  # 1-indexed dist identifiers
+                # if b_perc >= 0.5:
+                #     num_maj_black = num_maj_black + 1
 
                 # Count latino-majority districts
                 l_perc = part[self.hpop_col_name][i + 1] / part[self.pop_col_name][i + 1]  # 1-indexed dist identifiers
@@ -140,6 +151,7 @@ class RedistrictingMarkovChain(object):
                 if part["democratic_votes"][i] > part["republican_votes"][i]:
                     num_democratic_maj += 1
 
+            # bmaj_ensemble.append(num_maj_black)  # TOOD
             lmaj_ensemble.append(num_maj_latino)
             party_win_ensemble.append(num_democratic_maj)
 
