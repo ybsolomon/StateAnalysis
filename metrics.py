@@ -16,7 +16,7 @@ def md(part, minority):
 
     # Calculate number of majority minority districts
     for district in part[minority]:
-        minority_perc = part[minority][district + 1] / part["population"][district + 1]  # 1-indexed dist identifiers
+        minority_perc = part[minority][district] / part["population"][district]
         if minority_perc >= 0.5:
             num_maj_minority = num_maj_minority + 1
 
@@ -42,12 +42,14 @@ def pd(part, election, party):
             party_wins_1 += 1
 
         # Method 2: voting-percentage win
-        if part["democratic_votes"][district + 1] > part["republican_votes"][district + 1]:
-            party_wins_2 += 1
+        # if part["democratic_votes"][district + 1] > part["republican_votes"][district + 1]:
+        #     party_wins_2 += 1
 
     # Verify calculated party-won districts were (indeed) won
-    if not (party_wins_1 == party_seats and party_wins_2 == party_shares):
-        return party_seats
+    # if not (party_wins_1 == party_seats and party_wins_2 == party_shares):
+    #     return party_seats
+    if not party_wins_1 == party_seats:
+        return
 
     return party_wins_1
 

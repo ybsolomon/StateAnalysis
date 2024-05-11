@@ -136,7 +136,7 @@ class RedistrictingMarkovChain(object):
             cutedge_ensemble.append(len(part["our cut edges"]))
 
             num_maj_latino = 0
-            num_maj_black = 0  # TODO
+            num_maj_black = 0
             num_democratic_maj = 0
 
             # Calculate metrics for each state in the Markov Chain
@@ -146,21 +146,23 @@ class RedistrictingMarkovChain(object):
 
             for i in range(self.num_dist):
                 # Count black-majority districts
-                # TODO
-                b_perc = part[self.bvap][i + 1] / part["population"][i + 1]  # 1-indexed dist identifiers
-                if b_perc >= 0.5:
-                    num_maj_black = num_maj_black + 1
+                num_maj_black = md(part, self.bvap)
+                # b_perc = part[self.bvap][i + 1] / part["population"][i + 1]  # 1-indexed dist identifiers
+                # if b_perc >= 0.5:
+                #     num_maj_black = num_maj_black + 1
 
                 # Count latino-majority districts
-                l_perc = part[self.hpop_col_name][i + 1] / part["population"][i + 1]  # 1-indexed dist identifiers  # self.pop_col_name
-                if l_perc >= 0.5:
-                    num_maj_latino = num_maj_latino + 1
+                num_maj_latino = md(part, self.hpop_col_name)
+                # l_perc = part[self.hpop_col_name][i + 1] / part["population"][i + 1]  # 1-indexed dist identifiers
+                # if l_perc >= 0.5:
+                #     num_maj_latino = num_maj_latino + 1
 
                 # Count democratic-won districts
-                if part["democratic_votes"][i + 1] > part["republican_votes"][i + 1]:
-                    num_democratic_maj += 1
+                num_democratic_maj = pd(part, "G20PRE", "Democratic")
+                # if part["democratic_votes"][i + 1] > part["republican_votes"][i + 1]:
+                #     num_democratic_maj += 1
 
-            # bmaj_ensemble.append(num_maj_black)  # TOOD
+            bmaj_ensemble.append(num_maj_black)  # TODO
             lmaj_ensemble.append(num_maj_latino)
             party_win_ensemble.append(num_democratic_maj)
 
