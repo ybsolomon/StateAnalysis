@@ -49,7 +49,7 @@ def pd(part, election, party):
     # if not (party_wins_1 == party_seats and party_wins_2 == party_shares):
     #     return party_seats
     if not party_wins_1 == party_seats:
-        return
+        return party_seats
 
     return party_wins_1
 
