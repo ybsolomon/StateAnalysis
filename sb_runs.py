@@ -21,6 +21,7 @@ from gerrychain.tree import recursive_tree_part
 from gingleator import Gingleator
 #from little_helpers import *
 import json
+import multiprocessing
 
 ## Read in
 parser = argparse.ArgumentParser(description="SB Chain run",
@@ -55,7 +56,7 @@ N_SAMPS = 10
 SCORE_FUNCT = score_functs[0]
 EPS = 0.045
 MIN_POP_COL = args.col
-TOLERANCE = 0.3
+TOLERANCE = 0.1
 
 ## Setup graph, updaters, elections, and initial partition
 
@@ -92,7 +93,31 @@ num_bursts = int(ITERS/BURST_LEN)
 
 print("Starting Short Bursts Runs", flush=True)
 
-for n in range(N_SAMPS):
+# for n in range(N_SAMPS):
+#     sb_obs = gingles.short_burst_run(num_bursts=num_bursts, num_steps=BURST_LEN,
+#     maximize=True, verbose=False)
+#     print("\tFinished chain {}".format(n), flush=True)
+
+#     print("\tSaving results", flush=True)
+
+#     f_out = "data/states/{}_{}_dists{}_{}opt_{:.1%}_{}_sbl{}_score{}_{}.npy".format(TOLERANCE, "NY",
+#                                                         NUM_DISTRICTS, MIN_POP_COL, EPS,
+#                                                         ITERS, BURST_LEN, 0, n)
+#     np.save(f_out, sb_obs[1])
+
+#     f_out_part = "data/states/{}_{}_dists{}_{}opt_{:.1%}_{}_sbl{}_score{}_{}_max_part.p".format(TOLERANCE, "NY",
+#                                                         NUM_DISTRICTS, MIN_POP_COL, EPS,
+#                                                         ITERS, BURST_LEN, 0, n)
+
+#     max_stats = {"VAP": sb_obs[0][0]["VAP"],
+#     "BVAP": sb_obs[0][0]["BVAP"],
+#     "WVAP": sb_obs[0][0]["WVAP"],
+#     "HVAP": sb_obs[0][0]["HVAP"],}
+
+#     with open(f_out_part, "wb") as f_out:
+#         pickle.dump(max_stats, f_out)
+
+def func(n):
     sb_obs = gingles.short_burst_run(num_bursts=num_bursts, num_steps=BURST_LEN,
     maximize=True, verbose=False)
     print("\tFinished chain {}".format(n), flush=True)
@@ -115,3 +140,13 @@ for n in range(N_SAMPS):
 
     with open(f_out_part, "wb") as f_out:
         pickle.dump(max_stats, f_out)
+
+# pool_obj = multiprocessing.Pool()
+
+print("Running jobs {} times".format(N_SAMPS))
+
+# ans = pool_obj.map(func,range(0,N_SAMPS))
+# pool_obj.close()
+
+for i in range(0,N_SAMPS):
+    func(i)
