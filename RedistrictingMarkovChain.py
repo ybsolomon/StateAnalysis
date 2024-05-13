@@ -135,42 +135,42 @@ class RedistrictingMarkovChain(object):
         for part in self.random_walk:
             cutedge_ensemble.append(len(part["our cut edges"]))
 
-            num_maj_latino = 0
-            num_maj_black = 0
-            num_democratic_maj = 0
+            # num_maj_latino = 0
+            # num_maj_black = 0
+            # num_democratic_maj = 0
 
             # Calculate metrics for each state in the Markov Chain
             mmd_ensemble.append(mm(part, "G20PRE", "Democratic"))
             eg_ensemble.append(eg(part, "G20PRE"))
             pb_ensemble.append(pb(part, "G20PRE", "Democratic"))
 
-            for i in range(self.num_dist):
-                # Count black-majority districts
-                num_maj_black = md(part, self.bvap)
+            # for i in range(self.num_dist):
+            # Count black-majority districts
+            num_maj_black = md(part, self.bvap)
                 # b_perc = part[self.bvap][i + 1] / part["population"][i + 1]  # 1-indexed dist identifiers
                 # if b_perc >= 0.5:
                 #     num_maj_black = num_maj_black + 1
 
-                # Count latino-majority districts
-                num_maj_latino = md(part, self.hpop_col_name)
+            # Count latino-majority districts
+            num_maj_latino = md(part, self.hpop_col_name)
                 # l_perc = part[self.hpop_col_name][i + 1] / part["population"][i + 1]  # 1-indexed dist identifiers
                 # if l_perc >= 0.5:
                 #     num_maj_latino = num_maj_latino + 1
 
-                # Count democratic-won districts
-                num_democratic_maj = pd(part, "G20PRE", "Democratic")
+            # Count democratic-won districts
+            num_democratic_maj = pd(part, "G20PRE", "Democratic")
                 # if part["democratic_votes"][i + 1] > part["republican_votes"][i + 1]:
                 #     num_democratic_maj += 1
 
-            bmaj_ensemble.append(num_maj_black)  # TODO
+            bmaj_ensemble.append(num_maj_black)
             lmaj_ensemble.append(num_maj_latino)
             party_win_ensemble.append(num_democratic_maj)
 
         print("Walk complete")
-        return cutedge_ensemble, lmaj_ensemble, party_win_ensemble, mmd_ensemble, eg_ensemble, pb_ensemble
+        return cutedge_ensemble, lmaj_ensemble, bmaj_ensemble, party_win_ensemble, mmd_ensemble, eg_ensemble, pb_ensemble
 
 
-def plot_histograms(ensemble, filename):
-    plt.figure()
-    plt.hist(ensemble, align="left")
-    plt.savefig(filename)
+# def plot_histograms(ensemble, filename):
+#     plt.figure()
+#     plt.hist(ensemble, align="left")
+#     plt.savefig(filename)
